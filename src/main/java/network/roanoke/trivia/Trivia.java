@@ -1,6 +1,7 @@
 package network.roanoke.trivia;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
@@ -9,6 +10,7 @@ import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import network.roanoke.trivia.Commands.QuizCommands;
 import network.roanoke.trivia.Quiz.QuizManager;
 import network.roanoke.trivia.Utils.Messages;
@@ -19,6 +21,7 @@ public class Trivia implements ModInitializer {
     /**
      * Runs the mod initializer.
      */
+    public static final Identifier TRIVIA = new Identifier("trivia", "text");
     public static final Logger LOGGER = LoggerFactory.getLogger("Trivia");
     public static FabricServerAudiences adventure;
     public static MiniMessage mm = MiniMessage.miniMessage();
@@ -61,12 +64,14 @@ public class Trivia implements ModInitializer {
             }
         });
 
-        ServerMessageEvents.CHAT_MESSAGE.register((message, sender, params) -> {
+        ServerMessageEvents.ALLOW_CHAT_MESSAGE.addPhaseOrdering(TRIVIA, Event.DEFAULT_PHASE);
+        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register(TRIVIA, (message, sender, params) -> {
             if (quiz.quizInProgress()) {
                 if (quiz.isRightAnswer(message.getContent().getString())) {
                     LOGGER.info("Trivia question was answered correctly.");
                     quiz.processQuizWinner(sender, sender.server);}
             }
+            return true;
         });
 
 

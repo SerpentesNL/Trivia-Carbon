@@ -1,4 +1,5 @@
-<h1>Trivia - A Fabric 1.19.2 Question & Reward Plugin</h1>
+<h1>Trivia - A Fabric 1.20.1 Question & Reward Plugin</h1>
+<h2>This fork makes Trivia work with the Carbon Chat mod</h2>
 
 <h3>Originally created for the Roanoke Cobblemon Server to make Cobblemon items more obtainable</h2>
 
